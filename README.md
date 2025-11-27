@@ -1,99 +1,73 @@
-# Predicting Hospital Readmissions: README
+# Hospital Readmissions Prediction
 
-This project is part of a **Data Analytics Course** and aims to address the issue of hospital readmissions. By employing advanced machine learning techniques, the project predicts whether a patient will require readmission within 30 days of discharge. Below is a detailed overview of the project, its implementation, and results.
+## Project Overview
 
----
-
-## **Problem Statement**
-
-Hospital readmissions within 30 days of discharge are a pressing concern. They lead to higher costs, overburdened healthcare systems, and increased patient risks. Predicting the likelihood of readmission can help healthcare providers proactively manage high-risk patients and improve care quality.
+This project aims to predict whether a patient is likely to be readmitted to the hospital within 30 days of discharge. It involves data cleaning, preprocessing, training a machine learning model to handle missing data, training a final prediction model, and deploying the model as an interactive web application using Streamlit.
 
 ---
 
-## **Solution Description**
+## File Descriptions
 
-This project develops a machine learning model to predict hospital readmissions. The solution:
-- Processes patient demographic and clinical data.
-- Provides predictions on whether readmission is required.
-- Helps healthcare providers take timely, preventive measures.
+This section details the role of each file within the project.
 
-### **Key Features**
-- **Comprehensive Analysis**: Utilizes patient information such as medical history, lab results, and previous visits.
-- **Interactive Web Application**: Built using Streamlit, it offers an intuitive interface for entering patient data and obtaining predictions.
-- **Actionable Insights**: Enables proactive interventions to reduce readmission rates.
+### Data Files (`.csv`)
 
----
+-   **`hospital_readmissions.csv`**: The raw, original dataset containing patient and encounter information. This is the starting point for the project.
+-   **`hospital_readmissions_only_int.csv`**: An intermediate version of the dataset where categorical features have likely been encoded into integer representations.
+-   **`hospital_with_actual_A1C.csv`**: A subset of the data containing records where the `A1C_Result` was present.
+-   **`hospital_with_predicted_A1C.csv`**: The dataset after predicting and filling in missing `A1C_Result` values.
+-   **`hospital_readmissions_final.csv`**: The final, cleaned, and preprocessed dataset used for training the primary readmission prediction model. It contains the complete set of features and the target variable (`Readmitted`).
 
-## **Implementation Details**
+### Jupyter Notebooks (`.ipynb`)
 
-### **Tasks Completed**
+-   **`Replacing_A1C.ipynb`**: This notebook likely details the process of handling missing `A1C_Result` values. It probably explores the data, identifies missing values, and outlines the strategy for imputation.
+-   **`A1C_Model.ipynb`**: This notebook is used to train a machine learning model to predict the `A1C_Result` based on other patient features. This is a common technique to handle missing data for an important feature.
+-   **`Readmitted_Model.ipynb`**: This is the core notebook for the project. It uses the `hospital_readmissions_final.csv` dataset to train, evaluate, and save the final model for predicting patient readmission.
 
-1. **Data Preprocessing**:
-   - Handled outliers and skewed data distributions.
-   - Performed feature selection using heatmaps and variance inflation factor (VIF) analysis.
+### Model Files (`.pkl`)
 
-2. **Feature Engineering**:
-   - Developed a separate notebook for predicting A1C values to enrich the dataset.
-   - Engineered new features to enhance model performance.
+-   **`A1C_Model.pkl`**: A serialized, pre-trained machine learning model generated from the `A1C_Model.ipynb` notebook. Its purpose is to predict missing `A1C_Result` values.
+-   **`Readmission_Model.pkl`**: The final, serialized machine learning model for predicting hospital readmission. This model is generated from the `Readmitted_Model.ipynb` notebook and is used by the Streamlit application.
 
-3. **Model Building**:
-   - Tried various machine learning models, including:
-     - Logistic Regression
-     - Support Vector Classifier (SVC)
-     - Decision Tree Classifier
-     - Random Forest Classifier
-     - XGBoost Classifier
-   - Chose the best-performing model based on accuracy and AUC metrics.
+### Application File (`.py`)
 
-4. **Handling Imbalanced Data**:
-   - Used the **SMOTE-Tomek** method to address class imbalance in the dataset.
+-   **`Hospital_Streamlit.py`**: A Python script that creates an interactive web application using the Streamlit framework. It loads the `Readmission_Model.pkl` model and allows users to input patient data to get a real-time prediction on whether the patient will be readmitted.
 
-5. **Model Evaluation**:
-   - Evaluated performance using cross-validation, confusion matrix, classification report, and AUC metrics.
+### Project Management
+
+-   **`README.md`**: This file, providing a comprehensive guide to the project structure, files, and how to run the application.
 
 ---
 
-## **Main Technologies Used**
+## Data Flow
 
-- **Programming Languages**: Python
-- **Libraries**:
-  - **Data Manipulation**: pandas, numpy
-  - **Visualization**: matplotlib, seaborn
-  - **Modeling and Evaluation**: scikit-learn, XGBoost, imbalanced-learn (for SMOTE-Tomek)
+1.  The process starts with the raw **`hospital_readmissions.csv`**.
+2.  The **`Replacing_A1C.ipynb`** notebook is used to analyze missing A1C values.
+3.  The **`A1C_Model.ipynb`** notebook trains a model (**`A1C_Model.pkl`**) on data where the A1C result is known (**`hospital_with_actual_A1C.csv`**).
+4.  This model is then used to predict and fill in missing A1C values, resulting in **`hospital_with_predicted_A1C.csv`**.
+5.  Further preprocessing and cleaning in the **`Readmitted_Model.ipynb`** notebook lead to the creation of the **`hospital_readmissions_final.csv`** dataset.
+6.  This final dataset is used to train the primary prediction model, which is saved as **`Readmission_Model.pkl`**.
 
 ---
 
-## **Results**
+## How to Run the Application
 
-### **Performance Metrics**
+To run the web application and see the model in action, follow these steps:
 
-- **Accuracy**:
-  - Train Accuracy: **89.38%**
-  - Test Accuracy: **91.00%**
+**1. Install Dependencies:**
 
-- **Confusion Matrix**:
-  ```
-  [[99 17]
-   [ 1 83]]
-  ```
+Make sure you have the required Python libraries installed.
 
-- **Classification Report**:
-  ```
-                precision    recall  f1-score   support
+```bash
+pip install streamlit pandas numpy streamlit-option-menu Pillow scikit-learn
+```
 
-             0       0.99      0.85      0.92       116
-             1       0.83      0.99      0.90        84
+**2. Run the Streamlit App:**
 
-      accuracy                           0.91       200
-     macro avg       0.91      0.92      0.91       200
-  weighted avg       0.92      0.91      0.91       200
-  ```
+Open your terminal, navigate to the project directory, and run the following command:
 
-- **Receiver Operating Characteristic (ROC) Curve**:
-  - False Positive Rate: `[0.0, 0.1465, 1.0]`
-  - True Positive Rate: `[0.0, 0.988, 1.0]`
-  - Thresholds: `[inf, 1.0, 0.0]`
+```bash
+streamlit run Hospital_Streamlit.py
+```
 
-- **Area Under the Curve (AUC)**:
-  - **0.921**
-
+This will start a local web server and open the application in your browser. You can then navigate to the "Readmission" page, input patient details, and get a prediction from the model.

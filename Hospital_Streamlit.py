@@ -14,7 +14,7 @@ def predict_readmission(Gender, Admission_Type, Diagnosis, Num_Lab_Procedures,
        Num_Medications, Num_Outpatient_Visits, Num_Inpatient_Visits,
        Num_Emergency_Visits, Num_Diagnoses, A1C_Result):
 
-    with open("/Users/siddanthreddy/Readmission_Model.pkl","rb") as m:
+    with open("Readmission_Model.pkl","rb") as m:
         model = pickle.load(m)
     
     data = np.array([[Gender, Admission_Type, Diagnosis, Num_Lab_Procedures,
@@ -94,11 +94,11 @@ elif select == "Readmission":
             Admission_Type = 0
 
         Selected_Diagnosis  = st.selectbox('Select a Diagnosis:', ['Heart Disease', 'Diabetes', 'Injury', 'Infection'])
-        if Selected_Admission_Type  == "Heart Disease":
+        if Selected_Diagnosis  == "Heart Disease":
             Diagnosis = 1
-        elif Selected_Admission_Type == "Diabetes":
+        elif Selected_Diagnosis == "Diabetes":
             Diagnosis = 0
-        elif Selected_Admission_Type == "Injury":
+        elif Selected_Diagnosis == "Injury":
             Diagnosis = 3
         else:
             Diagnosis = 2
